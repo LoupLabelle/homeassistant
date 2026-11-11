@@ -6,7 +6,7 @@ blueprint:
 
     Written for use with Stelpro's `STZW402+` thermostat model.
   domain: automation
-  author: RagingCub
+  author: Loup Labelle
   input:
     thermostats:
       name: Thermostats

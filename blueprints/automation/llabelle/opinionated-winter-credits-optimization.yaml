@@ -6,7 +6,7 @@ blueprint:
 
     Uses [HydroQC](https://hydroqc.ca)'s sensors as default trigger timestamps.
   domain: automation
-  author: RagingCub
+  author: Loup Labelle
   input:
     triggers_section:
       name: Triggers settings
