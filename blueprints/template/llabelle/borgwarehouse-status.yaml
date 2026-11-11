@@ -1,0 +1,22 @@
+blueprint:
+  name: Expand a borgwarehouse sensor
+  description: Creates a binary_sensor which holds the status of a borg repository
+  domain: template
+  author: Loup Labelle
+  input:
+    reference_entity:
+      name: Sensor to be expanded
+      description: The sensor which needs to have its value expanded
+      selector:
+        entity:
+          domain: sensor
+variables:
+  reference_entity: !input reference_entity
+binary_sensor:
+  availability: "{{ states(reference_entity) not in ('unknown', 'unavailable') }}"
+  name: "{{ state_attr(reference_entity, 'friendly_name') }} Status"
+  unique_id: status
+  state: "{{ is_state(reference_entity, 'False') }}"
+  device_class: problem
+  attributes:
+    last_save: "{{ (state_attr(reference_entity, 'lastSave') | as_datetime | as_local | string)[:19] }}"

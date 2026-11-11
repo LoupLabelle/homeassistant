@@ -1,0 +1,23 @@
+blueprint:
+  name: Expand a borgwarehouse sensor
+  description: Creates sensors which holds the used storage of a borg repository
+  domain: template
+  author: Loup Labelle
+  input:
+    reference_entity:
+      name: Sensor to be expanded
+      description: The sensor which needs to have its value expanded
+      selector:
+        entity:
+          domain: sensor
+variables:
+  reference_entity: !input reference_entity
+sensor:
+  availability: "{{ states(reference_entity) not in ('unknown', 'unavailable') }}"
+  name: "{{ state_attr(reference_entity, 'friendly_name') }} Used Storage"
+  unique_id: used_storage
+  icon: mdi:database
+  state: "{{ state_attr(reference_entity, 'storageUsed') / 1024 /1024 }}"
+  unit_of_measurement: 'GiB'
+  device_class: data_size
+  state_class: measurement

@@ -1,0 +1,28 @@
+blueprint:
+  name: Expand a borgwarehouse sensor
+  description: Creates a sensor which holds the percent storage used by a borg repository
+  domain: template
+  author: Loup Labelle
+  input:
+    reference_entity:
+      name: Sensor to be expanded
+      description: The sensor which needs to have its value expanded
+      selector:
+        entity:
+          domain: sensor
+variables:
+  reference_entity: !input reference_entity
+sensor:
+  availability: "{{ states(reference_entity) not in ('unknown', 'unavailable') }}"
+  name: "{{ state_attr(reference_entity, 'friendly_name') }} Storage"
+  unique_id: storage
+  icon: mdi:cloud-percent
+  state: >
+    {% set storage_size_bytes = state_attr(reference_entity, 'storageSize') * 1024 * 1024 %}
+    {% set storage_used_bytes = state_attr(reference_entity, 'storageUsed') %}
+    {% if storage_size_bytes > 0 %}
+      {{ storage_used_bytes / storage_size_bytes * 100 }}
+    {% else %}
+      0
+    {% endif %}
+  unit_of_measurement: '%'
